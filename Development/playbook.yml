@@ -45,3 +45,13 @@
           with_items:
             - git
             - docker.io
+
+    #- name: Build an image by running ansible in a container
+    #  hosts: all
+    #  become: yes
+    #  tasks:
+    #   - name: Start a container
+    #     docker_container:
+    #       name: jenkins
+    #       image: jenkins:latest
+    #       command: "sleep infinity"

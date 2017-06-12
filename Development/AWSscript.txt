@@ -1,10 +1,13 @@
 #!/bin/bash
 
-sudo apt-get -y update && sudo apt-get -y upgrade
+sudo apt-get -y update
+sudo apt-get -y upgrade << EOF
+2
+EOF
 sudo apt-get install -y software-properties-common
 sudo apt-add-repository -y ppa:ansible/ansible
 sudo apt-get install -y ansible git
 
 
-sudo chmod 777 playbook.yml
-ansible-playbook -i hosts playbook.yml
+#sudo chmod 777 playbook.yml
+#ansible-playbook -i hosts playbook.yml

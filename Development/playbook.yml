@@ -2,11 +2,12 @@
 - hosts: localhost
   connection: local
   gather_facts: False
+  include_vars: setupvariables.yml
   tasks:
     - name: Provision a set of instances
       ec2:
-         aws_access_key: knwewenwedked
-         aws_secret_key: lasdljn
+         aws_access_key: "{{ec2_access_key}}"
+         aws_secret_key: "{{ec2_secret_key}}"
          key_name: General
          group: default
          instance_type: t2.micro

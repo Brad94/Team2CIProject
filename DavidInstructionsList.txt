@@ -1,0 +1,39 @@
+sudo apt update
+sudo apt upgrade -y
+
+# AWS instance performance
+
+sudo apt install htop
+htop
+
+# install Java
+
+sudo apt install default-jdk
+sudo apt install default-jre
+
+# install maven
+
+sudo apt install maven
+
+java -version
+mvn -version
+
+# GitHub
+
+sudo apt install git
+git clone https://github.com/wakaleo/game-of-life
+
+cd game-of-life
+mvn install
+cd gameoflife-web
+mvn jetty:run
+
+# install Docker
+
+wget -qO- https://get.docker.com/ | sh
+sudo usermod -aG docker ubuntu
+
+# Logout of instance
+
+sudo service docker restart
+docker pull jenkins

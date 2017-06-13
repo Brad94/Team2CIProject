@@ -1,0 +1,66 @@
+# hashtag is a comment!!
+
+
+
+
+sudo apt update
+sudo apt upgrade -y
+
+# AWS instance performance
+
+sudo apt install htop
+htop
+
+# install Java
+
+sudo apt install default-jdk
+sudo apt install default-jre
+
+# install maven
+
+sudo apt install maven
+docker pull maven (which is better? You decide!)
+
+java -version
+mvn -version
+
+# GitHub
+
+sudo apt install git
+git clone https://github.com/wakaleo/game-of-life
+
+cd game-of-life
+mvn install
+cd gameoflife-web
+mvn jetty:run
+
+# install Docker
+
+wget -qO- https://get.docker.com/ | sh
+sudo usermod -aG docker ubuntu
+
+# Logout of instance
+
+docker pull jenkins
+
+# Docker Jenkins
+
+docker run -p 8080:8080 -p 50000:50000 -v /home/ubuntu:/var/jenkins_home --detach jenkins
+
+cd /home/ubuntu/secrets
+cat initialAdminPassword
+
+# jenkins password appears in cli and /var/jenkins_home/secrets/initialAdminPassword
+
+# jenkins
+
+java -jar jenkins-cli.jar -s myAWSsite:8080/ help
+
+# jira
+
+docker pull cptactionhank/atlassian-jira
+docker run --detach --publish 8081:8080 cptactionhank/atlassian-jira:latest
+
+# nexus is BIG
+
+

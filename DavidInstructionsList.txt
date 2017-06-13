@@ -35,5 +35,14 @@ sudo usermod -aG docker ubuntu
 
 # Logout of instance
 
-sudo service docker restart
 docker pull jenkins
+
+# Docker Jenkins
+
+docker run -p 8080:8080 -p 50000:50000 -v /home/ubuntu:/var/jenkins_home -d jenkins
+
+# jenkins password appears in cli and /var/jenkins_home/secrets/initialAdminPassword
+
+# jenkins
+
+java -jar jenkins-cli.jar -s myAWSsite:8080/ help

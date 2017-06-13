@@ -19,6 +19,7 @@ sudo apt install default-jre
 # install maven
 
 sudo apt install maven
+docker pull maven (which is better? You decide!)
 
 java -version
 mvn -version
@@ -45,6 +46,9 @@ docker pull jenkins
 # Docker Jenkins
 
 docker run -p 8080:8080 -p 50000:50000 -v /home/ubuntu:/var/jenkins_home --detach jenkins
+
+cd /home/ubuntu/secrets
+cat initialAdminPassword
 
 # jenkins password appears in cli and /var/jenkins_home/secrets/initialAdminPassword
 

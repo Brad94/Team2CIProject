@@ -1,12 +1,16 @@
 #!/bin/bash
-
 sudo apt-get -y update
-sudo apt-get -y upgrade << EOF
-2
-EOF
+export DEBIAN_FRONTEND=noninteractive apt-get upgrade -yq
 sudo apt-get install -y software-properties-common
 sudo apt-add-repository -y ppa:ansible/ansible
+sudo apt-get -y update
 sudo apt-get install -y ansible git
+sudo apt install -y python-pip
+pip install --upgrade pip
+pip install boto
+
+cd /etc/ansible 
+sudo wget https://raw.githubusercontent.com/JMurph9/Team2CIProject/master/Development/playbook.yml
 
 
 #sudo chmod 777 playbook.yml

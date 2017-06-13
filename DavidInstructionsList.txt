@@ -1,3 +1,8 @@
+# hashtag is a comment!!
+
+
+
+
 sudo apt update
 sudo apt upgrade -y
 
@@ -46,3 +51,7 @@ docker run -p 8080:8080 -p 50000:50000 -v /home/ubuntu:/var/jenkins_home -d jenk
 # jenkins
 
 java -jar jenkins-cli.jar -s myAWSsite:8080/ help
+
+# jira
+
+docker run --detach --publish 8081:8080 cptactionhank/atlassian-jira:latest

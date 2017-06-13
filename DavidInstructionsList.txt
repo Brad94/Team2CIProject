@@ -44,7 +44,7 @@ docker pull jenkins
 
 # Docker Jenkins
 
-docker run -p 8080:8080 -p 50000:50000 -v /home/ubuntu:/var/jenkins_home -d jenkins
+docker run -p 8080:8080 -p 50000:50000 -v /home/ubuntu:/var/jenkins_home --detach jenkins
 
 # jenkins password appears in cli and /var/jenkins_home/secrets/initialAdminPassword
 
@@ -55,3 +55,7 @@ java -jar jenkins-cli.jar -s myAWSsite:8080/ help
 # jira
 
 docker run --detach --publish 8081:8080 cptactionhank/atlassian-jira:latest
+
+# nexus is BIG
+
+

@@ -15,3 +15,6 @@ https://www.youtube.com/watch?v=fxVqo7nomfA
 Backing up and restoring snapshots on Amazon EC2 machines
 http://www.techrepublic.com/blog/the-enterprise-cloud/backing-up-and-restoring-snapshots-on-amazon-ec2-machines/
 
+Launching aws ec2 instances with ansible
+https://stackoverflow.com/questions/30227140/best-way-to-launch-aws-ec2-instances-with-ansible
+

@@ -61,3 +61,7 @@ Jenkins requires Maven but it is not a dependency
 `$ cd gameoflife-web`
 
 `$ mvn jetty:run`
+
+## Remove all exited Docker Containers
+
+`$ docker rm $(docker ps -a -f status=exited -q)`

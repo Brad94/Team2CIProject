@@ -41,11 +41,12 @@ sudo usermod -aG docker ubuntu
 
 # Logout of instance
 
-docker pull jenkins
-
 # Docker Jenkins
 
+docker pull jenkins
 docker run -p 8080:8080 -p 50000:50000 -v /home/ubuntu:/var/jenkins_home --detach jenkins
+docker run -ti jenkins bash
+java -version
 
 cd /home/ubuntu/secrets
 cat initialAdminPassword
@@ -63,4 +64,5 @@ docker run --detach --publish 8081:8080 cptactionhank/atlassian-jira:latest
 
 # nexus is BIG
 
+docker pull sonatype/nexus
 

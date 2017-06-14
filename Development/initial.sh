@@ -12,8 +12,7 @@ aws ec2 create-key-pair --key-name Team2Dev --output text > Team2Dev.pem
 sudo chown root Team2Dev.pem
 sudo chmod 400 Team2Dev.pem
 
-aws ec2 run-instances --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Team2:DevOpsPipeline}]' --image-id ami-f1d7c395 --security-group-id $SGName --count 1 --instance-type t2.micro --key-name AcademyKeyPair --query 'Instances[0].InstanceId' --subnet-id subnet-7d578c06 --user-data file://AWSscript.txt
+aws ec2 run-instances --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Team2:DevOpsPipeline}]' --image-id ami-f1d7c395 --security-group-id $SGName --count 1 --instance-type t2.micro --key-name Team2KP --query 'Instances[0].InstanceId' --subnet-id subnet-7d578c06 --user-data file://AWSscript.txt
 
 InstanceDNS=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=Team2:DevOpsPipeline" --query 'Reservations[].Instances[].PublicDnsName')
 scp -i Team2Dev.pem setupvariables.yml ubuntu@$InstanceDNS:~
-

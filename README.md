@@ -32,6 +32,10 @@
 
 `$ docker pull jenkins`
 
+Jenkins requires Maven but it is not a dependency
+
+`$ docker pull maven`
+
 `$ docker run -p 8080:8080 -p 50000:50000 -v /home/ubuntu:/var/jenkins_home --detach jenkins`
 
 `$ docker run -ti jenkins bash`

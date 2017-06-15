@@ -1,47 +1,17 @@
 ---
-- hosts: localhost
-  connection: local
-  gather_facts: False
-#  include_vars: setupvariables.yml
-  tasks:
-    - name: Provision a set of instances
-      ec2:
-         aws_access_key: 
-         aws_secret_key: 
-         key_name: Team2KP
-         vpc_subnet_id: subnet-7d578c06
-         group: team2DEV
-         instance_type: t2.micro
-         image: ami-f1d7c395
-         wait: true
-         exact_count: 1
-         region: eu-west-2
-         count_tag:
-            Name: Team2
-         instance_tags:
-            Name: Team2
-      register: ec2
 
-    - name: Add all instance public IPs to host group
-      add_host: hostname={{ item.public_ip }} groups=ec2hosts
-      with_items: "{{ ec2.instances }}"
-
-    - name: Wait for SSH to come up
-      wait_for:
-        host: "{{ item.public_dns_name }}"
-        port: 22
-        delay: 60
-        timeout: 320
-        state: started
-      with_items: "{{ ec2.instances }}"
-
-    - name: SSH into new machine
-      command: 'ssh -i {{ansible_ssh_private_key_file}} ubuntu@{{ item.public_ip }}'
-      with_items: "{{ ec2.instances }}"
+- name: Wait for SSH to come up
+  become: yes
+  wait_for:
+  host: 35.177.226.33 
+  port: 22
+  delay: 20
+  timeout: 500
 
 - name: configuration play
   hosts: ec2hosts
-# user: ubuntu
+  become: yes
+  user: ubuntu
   gather_facts: true
   tasks:
     - name: install base packages
@@ -51,7 +21,7 @@
         - docker.io
 
 - name: Build an image by running ansible in a container
-  hosts: all
+  hosts: ec2hosts
   become: yes
   tasks:
   - name: Start a container
@@ -59,3 +29,7 @@
       name: jenkins
       image: jenkins:latest
       command: "sleep infinity"
+
+
+
+

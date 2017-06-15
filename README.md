@@ -64,6 +64,8 @@ Jenkins requires Maven but it is not a dependency
 
 ## Remove all exited Docker Containers
 
-`$ docker rm $(docker ps -a -f status=exited -q)`
+`$ docker stop $(docker ps -a -q)`
+
+`$ docker rm $(docker ps -a -q)`
 
  *[Commands for docker containers](https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes)*

@@ -70,9 +70,29 @@ docker pull sonatype/nexus
 
 https://github.com/dsm23/testrepo
 
-docker run --name maventest -v /home/ubuntu/testrepo:/home/ubuntu/testrepo -w /home/ubuntu/testrepo maven mvn install
-
 # Remove all exited docker containers
 
 docker rm $(docker ps -a -f status=exited -q)
+
+https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes
+
+# Remove all docker containers
+
+docker rm $(docker ps -a -q)
+
+# Waste of time with Maven
+
+docker run --name maventest -v /home/ubuntu/testrepo:/home/ubuntu/testrepo -w /home/ubuntu/testrepo -p 9090:9090 maven mvn install
+
+docker run -ti -v /home/ubuntu/testrepo:/home/ubuntu/testrepo -w /home/ubuntu/testrepo maven bash
+
+# linking containers
+
+$ docker run --name verttest -v /home/ubuntu/tempfolder:/usr/share/maven --detach maven
+
+docker run --name some-mysql -v /home/ubuntu/mysqldir:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=abcde -d mysql:8.0
+
+docker run --name some-mysql -v /home/ubuntu/mysqldir:/var/lib/mysql -d mysql:8.0
+
+docker run -it -v /home/ubuntu/mysqldir:/home/newdir php:7.0-apache bash
 

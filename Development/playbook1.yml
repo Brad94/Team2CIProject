@@ -1,0 +1,127 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+#  include_vars: setupvariables.yml
+  tasks:
+ #   - name: Provision a set of instances
+ #     ec2:
+ #        aws_access_key: 
+ #        aws_secret_key: 
+ #        key_name: Team2KP
+ #        vpc_subnet_id: subnet-7d578c06
+ #        group: team2DEV
+ #        instance_type: t2.micro
+ #        image: ami-f1d7c395
+ #        wait: true
+ #        exact_count: 1
+ #        region: eu-west-2
+ #        user_data: "{{ lookup('file', 'remove.sh') }}"
+ #        count_tag:
+ #           Name: Team2Agent1
+ #        instance_tags:
+ #           Name: Team2Agent1
+ #     register: ec2
+
+ #   - name: Add all instance public IPs to host group
+ #     become: yes
+ #     add_host: hostname={{ item.public_ip }} groups=ec2hosts1
+ #     with_items: "{{ ec2.instances }}"
+
+ #   - name: Wait for SSH to come up
+ #     become: yes
+ #     wait_for:
+ #       host: "{{ item.public_dns_name }}"
+ #       port: 22
+ #       delay: 20
+ #       timeout: 500
+ #       state: started
+ #     with_items: "{{ ec2.instances }}"
+
+   # - name: SSH into new machine
+    #  become: yes
+     # command: 'ssh -v -i {{ansible_ssh_private_key_file}} ubuntu@{{ item.public_ip }}'
+      #with_items: "{{ ec2.instances }}"
+
+
+#- hosts: ec2hosts
+#  vars:
+#    ansible_python_interpreter: "/usr/bin/python3"
+
+#- name: dependency provisioning
+#  hosts: all
+#  become: yes
+#  become_method: sudo
+#  gather_facts: false
+#  tasks:
+#    - name: install python2
+#      raw: sudo apt-get -y install python-simplejson
+
+
+- name: configuration play
+  hosts: ec2hosts1
+  become: yes
+  user: ubuntu
+  gather_facts: true
+  pre_tasks: 
+   - name: Refresh apt cache
+     become: no
+     local_action: shell ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 {{ inventory_hostname }} sudo apt-get update
+       
+   - name: Install Python-apt to pull in Python
+     become: no
+     local_action: shell ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 {{ inventory_hostname }} sudo apt-get install --no-install-recommends --assume-yes python-apt
+  tasks:
+    - name: install base packages
+      apt: pkg={{item}} state=present update_cache=yes
+      with_items:
+        - git
+        - python-pip
+        - docker.io
+
+
+- name: Install Docker
+  hosts: ec2hosts1
+  become: yes
+  user: ubuntu
+  gather_facts: true
+  tasks:
+    - pip:
+       name: docker-py
+
+- name: Build Jenkins container
+  hosts: ec2hosts1
+  become: yes
+  user: ubuntu
+  gather_facts: true
+  tasks:
+  - name: Start Jenkins container
+    docker_container:
+      name: jenkins
+      image: jenkins:latest
+      command: "sleep infinity"
+
+- name: Build Maven container
+  hosts: ec2hosts1
+  become: yes
+  user: ubuntu
+  gather_facts: true
+  tasks:
+  - name: Start Maven container
+    docker_container:
+      name: maven
+      image: maven:3.5.0-jdk-9
+      command: "sleep infinity"
+
+
+- name: Build Nexus container
+  hosts: ec2hosts1
+  become: yes
+  user: ubuntu
+  gather_facts: true
+  tasks:
+  - name: Start Nexus container
+    docker_container:
+      name: nexus
+      image: sonatype/nexus
+      command: "sleep infinity"

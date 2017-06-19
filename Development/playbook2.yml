@@ -11,16 +11,16 @@
          key_name: Team2KP
          vpc_subnet_id: subnet-7d578c06
          group: team2DEV
-         instance_type: t2.micro
+         instance_type: t2.small
          image: ami-f1d7c395
          wait: true
          exact_count: 1
          region: eu-west-2
          user_data: "{{ lookup('file', 'remove.sh') }}"
          count_tag:
-            Name: Team2Agent2
+            Name: Team2SmallAgent2
          instance_tags:
-            Name: Team2Agent2
+            Name: Team2SmallAgent2
       register: ec2
 
     - name: Add all instance public IPs to host group
@@ -87,7 +87,11 @@
     docker_container:
       name: jira
       image: cptactionhank/atlassian-jira
-      command: "sleep infinity"
+      detach: True
+      ports:
+         - "8080:8080"
+#      command: "sleep infinity"
+      state: started
 
 - name: Build Zabbix container
   hosts: ec2hosts2

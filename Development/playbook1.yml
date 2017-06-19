@@ -1,4 +1,5 @@
 ---
+
 - hosts: localhost
   connection: local
   gather_facts: False
@@ -98,8 +99,24 @@
   - name: Start Jenkins container
     docker_container:
       name: jenkins
-      image: jenkins:latest
-      command: "sleep infinity"
+      image: fjudith/jenkins
+ #     command: "sleep infinity"
+      detach: True
+      ports:
+        - "8080:8080"
+        - "50000:50000"
+      state: started
+  - name: Start Nginx container
+    docker_container:
+      name: nginx
+      image: fjudith/jenkins-nginx
+#      command: "sleep infinity"
+      detach: True
+      links:
+        - jenkins:jenkins-master
+      ports:
+        - "80:80"
+      state: started
 
 - name: Build Maven container
   hosts: ec2hosts1

@@ -50,6 +50,8 @@ Jenkins requires Maven but it is not a dependency
 
 `$ docker run --detach --publish 8081:8080 cptactionhank/atlassian-jira:latest`
 
+## Linking Jira and MySQL
+
 ## GitHub
 
 `$ git clone https://github.com/dsm23/testrepo`
@@ -69,3 +71,13 @@ Jenkins requires Maven but it is not a dependency
 `$ docker rm $(docker ps -a -q)`
 
  *[Commands for docker containers](https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes)*
+ 
+ ## Ansible install
+ 
+`$ sudo apt-get install software-properties-common`
+
+`$ sudo apt-add-repository ppa:ansible/ansible`
+
+`$ sudo apt-get update`
+
+`$ sudo apt-get install ansible`

@@ -77,22 +77,22 @@
     - pip:
        name: docker-py
 
-- name: Build Jira container
-  hosts: ec2hosts2
-  become: yes
-  user: ubuntu
-  gather_facts: true
-  tasks:
-  - name: Start Jira container
-    docker_container:
-      name: jira
-      image: cptactionhank/atlassian-jira
-      detach: True
-      ports:
-         - "8080:8080"
-#      command: "sleep infinity"
-      state: started
-
+#- name: Build Jira container
+#  hosts: ec2hosts2
+#  become: yes
+#  user: ubuntu
+#  gather_facts: true
+#  tasks:
+#  - name: Start Jira container
+#    docker_container:
+#      name: jira
+#      image: cptactionhank/atlassian-jira
+#      detach: True
+#      ports:
+#         - "8080:8080"
+##      command: "sleep infinity"
+#      state: started
+#      restart_policy: always
 - name: Build Zabbix container
   hosts: ec2hosts2
   become: yes
@@ -104,3 +104,4 @@
       name: zabbix
       image: zabbix/zabbix-web-nginx-mysql
       command: "sleep infinity"
+      restart_policy: always

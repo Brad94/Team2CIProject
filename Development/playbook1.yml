@@ -90,46 +90,35 @@
     - pip:
        name: docker-py
 
-- name: Build Jenkins container
-  hosts: ec2hosts1
-  become: yes
-  user: ubuntu
-  gather_facts: true
-  tasks:
-  - name: Start Jenkins container
-    docker_container:
-      name: jenkins
-      image: fjudith/jenkins
+#- name: Build Jenkins container
+#  hosts: ec2hosts1
+#  become: yes
+#  user: ubuntu
+#  gather_facts: true
+#  tasks:
+#  - name: Start Jenkins container
+#    docker_container:
+#      name: jenkins
+#      image: fjudith/jenkins
  #     command: "sleep infinity"
-      detach: True
-      ports:
-        - "8080:8080"
-        - "50000:50000"
-      state: started
-  - name: Start Nginx container
-    docker_container:
-      name: nginx
-      image: fjudith/jenkins-nginx
+#      detach: True
+#      ports:
+#        - "8080:8080"
+#        - "50000:50000"
+#      state: started
+#      restart_policy: always
+#  - name: Start Nginx container
+#    docker_container:
+#      name: nginx
+#      image: fjudith/jenkins-nginx
 #      command: "sleep infinity"
-      detach: True
-      links:
-        - jenkins:jenkins-master
-      ports:
-        - "80:80"
-      state: started
-
-- name: Build Maven container
-  hosts: ec2hosts1
-  become: yes
-  user: ubuntu
-  gather_facts: true
-  tasks:
-  - name: Start Maven container
-    docker_container:
-      name: maven
-      image: maven:3.5.0-jdk-9
-      command: "sleep infinity"
-
+#      detach: True
+#      links:
+#        - jenkins:jenkins-master
+#      ports:
+#        - "80:80"
+#      state: started
+#      restart_policy: always
 
 - name: Build Nexus container
   hosts: ec2hosts1
@@ -140,5 +129,25 @@
   - name: Start Nexus container
     docker_container:
       name: nexus
-      image: sonatype/nexus
-      command: "sleep infinity"
+      image: sonatype/nexus3
+#      command: "sleep infinity"
+#      restart_policy: always
+      env:
+       JAVA_MAX_HEAP: 1500m
+      ports:
+        - "8081:8081"
+
+#- name: Build Java container
+#  hosts: ec2hosts1
+#  become: yes
+#  user: ubuntu
+#  gather_facts: true
+#  tasks:
+#  - name: Start Java container
+#    docker_container:
+#      name: java
+#      image: java:alpine
+##      restart_policy: always
+#      detach: True
+##      links:
+##        - java:java      

@@ -86,4 +86,4 @@ Jenkins requires Maven but it is not a dependency
 
 `$ docker pull tomcat`
 
-`$  docker run -it --rm -p 8888:8080 tomcat:8.0`
+`$  docker run -it --detach -p 8888:8080 tomcat:8.0`

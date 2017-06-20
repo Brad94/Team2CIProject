@@ -81,3 +81,9 @@ Jenkins requires Maven but it is not a dependency
 `$ sudo apt-get update`
 
 `$ sudo apt-get install ansible`
+
+## Tomcat install
+
+`$ docker pull tomcat`
+
+`$  docker run -it --rm -p 8888:8080 tomcat:8.0`

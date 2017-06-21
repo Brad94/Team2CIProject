@@ -46,13 +46,15 @@ Jenkins requires Maven but it is not a dependency
 
 `$ docker pull maven`
 
-`$ docker run -p 8080:8080 -p 50000:50000 -v /home/ubuntu:/var/jenkins_home --detach jenkins`
+`$ mkdir temp`
 
-`$ docker run -ti jenkins bash`
+`$ docker run -p 8080:8080 -p 50000:50000 -v /home/ubuntu/temp:/var/jenkins_home --detach jenkins`
+
+`$ docker run -ti -v /home/ubuntu/temp:/home/info/ jenkins bash`
 
 `$ java -version`
 
-`$ cat /home/ubuntu/secrets/initialAdminPassword`
+`$ cat /home/info/secrets/initialAdminPassword`
 
 ## Docker Jira
 

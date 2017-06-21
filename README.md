@@ -10,7 +10,17 @@
 
 ## install Java
 
-`$ sudo apt install default-jdk default-jre`
+`$ wget --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz`
+
+`$ wget --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jre-8u131-linux-x64.tar.gz`
+
+`$ sudo cp -avr jdk1.8.0_131 jre1.8.0_131`
+
+`$ update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_131/bin/java 100`
+
+`$ update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_131/bin/java 100`
+
+`$ update-alternatives --install /usr/bin/java java /opt/jre1.8.0_131/bin/java 100`
 
 ## install Maven
 
@@ -51,6 +61,14 @@ Jenkins requires Maven but it is not a dependency
 `$ docker run --detach --publish 8081:8080 cptactionhank/atlassian-jira:latest`
 
 ## Linking Jira and MySQL
+
+## Docker Nexus
+
+`$ docker pull sonatype/nexus`
+
+## Docker Zabbix
+
+`$ docker pull zabbix/zabbix-server-mysql`
 
 ## GitHub
 

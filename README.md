@@ -48,6 +48,8 @@ Jenkins requires Maven but it is not a dependency
 
 `$ mkdir temp`
 
+a new directory with non-root access is required
+
 `$ docker run -p 8080:8080 -p 50000:50000 -v /home/ubuntu/temp:/var/jenkins_home --detach jenkins`
 
 `$ docker run -ti -v /home/ubuntu/temp:/home/info/ jenkins bash`

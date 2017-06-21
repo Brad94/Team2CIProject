@@ -16,11 +16,11 @@
 
 `$ sudo cp -avr jdk1.8.0_131 jre1.8.0_131 /opt`
 
-`$ update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_131/bin/java 100`
+`$ sudo update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_131/bin/java 100`
 
-`$ update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_131/bin/java 100`
+`$ sudo update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_131/bin/java 100`
 
-`$ update-alternatives --install /usr/bin/java java /opt/jre1.8.0_131/bin/java 100`
+`$ sudo update-alternatives --install /usr/bin/java java /opt/jre1.8.0_131/bin/java 100`
 
 ## install Maven
 

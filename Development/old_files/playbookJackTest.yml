@@ -49,49 +49,47 @@
 #      raw: sudo apt-get -y install python-simplejson
 
 
-- name: configuration play
+- name: install zabbix
   hosts: ec2hosts3
+  remote_user: ubuntu
   become: yes
-  user: ubuntu
-  gather_facts: true
-  pre_tasks: 
-   - name: Refresh apt cache
-     become: no
-     local_action: shell ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 {{ inventory_hostname }} sudo apt-get update
-       
-   - name: Install Python-apt to pull in Python
-     become: no
-     local_action: shell ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 {{ inventory_hostname }} sudo apt-get install --no-install-recommends --assume-yes python-apt
   tasks:
-    - name: install base packages
-      apt: pkg={{item}} state=present update_cache=yes
-      with_items:
-        - git
-        - python-pip
-        - docker.io
+   - name: update package manager
+     apt: update_cache=yes
 
+   - name: Install mysql
+     docker_container:
+       name: mysqlzab
+       image: mysql:mysql
+       state: started
+       env:
+         MYSQL_ROOT_PASSWORD: zabb
+         MYSQL_USER: zabbix
+         MYSQL_PASSWORD: zabbix
 
-- name: Install Docker
-  hosts: ec2hosts3
-  become: yes
-  user: ubuntu
-  gather_facts: true
-  tasks:
-    - pip:
-       name: docker-py
+   - name: Install zabbix server
+     docker_container:
+       name: zabbixserver
+       image: zabbix/zabbix-server-mysql
+       state: started
+       links: "mysqlmzab"
+       env:
+        DB_SERVER_HOST: mysqlzab
+        MYSQL_USER: zabbix
+        MYSQL_PASSWORD: password
 
-- name: Build Nexus container
-  hosts: ec2hosts3
-  become: yes
-  user: ubuntu
-  gather_facts: true
-  tasks:
-  - name: Start Nexus container
-    docker_container:
-      name: nexus
-      image: sonatype/nexus
-#      env:
-#       JAVA_MAX_HEAP: 1500m
-      ports:
-        - "8081:8081"
-      state: started
+   - name: Install zabbix frontend on Ubuntu
+     docker_container:
+       name: zabbixapache
+       image: zabbix/zabbix-web-apache-mysql:ubuntu-3.0-latest
+       state: started
+       restart: yes
+       links:
+        - "mysqlzab:mzab"
+        - "zabbixserver:zserver"
+       env:
+        DB_SERVER_HOST: mysqlzab
+        MYSQL_USER: zabbix
+        MYSQL_PASSWORD: password
+        PHP_TZ: Europe/London
+        ZBX_SERVER_HOST: zabbixserver

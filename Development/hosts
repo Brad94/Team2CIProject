@@ -44,8 +44,10 @@
 ## db-[99:101]-node.example.com
 
 [ec2hosts1]
-35.176.109.3
+35.176.48.213
 [ec2hosts2]
-
+35.176.138.88
+[ec2hosts3]
+10.0.0.177
 [ec2hostsPEM]
 ansible_ssh_private_key_file=/root/.ssh/Team2KP.pem

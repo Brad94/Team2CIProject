@@ -93,6 +93,7 @@
 ##      command: "sleep infinity"
 #      state: started
 #      restart_policy: always
+
 - name: Build Zabbix container
   hosts: ec2hosts2
   become: yes

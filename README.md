@@ -106,6 +106,6 @@ a new directory with non-root access is required
 
 ## Tomcat install
 
-`$ docker pull tomcat`
+`$ docker pull cloudesire/tomcat:7-jre8`
 
-`$  docker run -it --detach -p 8888:8080 tomcat:8.0`
+`$ docker run --detach -p 80:8080 -e TOMCAT_PASS="thispass" cloudesire/tomcat:7-jre8`

@@ -108,6 +108,6 @@ a new directory with non-root access is required
 
 `$ docker pull cloudesire/tomcat:7-jre8`
 
-`$ docker run --detach -p 80:8080 -e TOMCAT_PASS="thispass" cloudesire/tomcat:7-jre8`
+`$ docker run --detach -p 8888:8080 -e TOMCAT_PASS="thispass" cloudesire/tomcat:7-jre8`
 
 then go to the url of the AWS Instance containing Tomcat then hit 'Manager App' then enter 'admin' as username and 'thispass' as password

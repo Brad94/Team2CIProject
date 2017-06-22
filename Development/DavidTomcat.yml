@@ -1,0 +1,16 @@
+- name: Build Tomcat container
+  hosts: ec2hosts1
+  become: yes
+  user: ubuntu
+  gather_facts: true
+  tasks:
+  - name: Start Tomcat container
+    docker_container:
+      name: tomcat
+      image: cloudesire/tomcat:7-jre8
+      ports:
+        - "80:8080"
+      state: started
+      restart_policy: always
+	  env:
+		TOMCAT_PASS: thispass

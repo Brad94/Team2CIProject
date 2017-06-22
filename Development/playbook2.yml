@@ -1,45 +1,45 @@
 ---
-- hosts: localhost
-  connection: local
-  gather_facts: False
+#- hosts: localhost
+#  connection: local
+#  gather_facts: False
 #  include_vars: setupvariables.yml
-  tasks:
-    - name: Provision a set of instances
-      ec2:
-         aws_access_key: 
-         aws_secret_key: 
-         key_name: Team2KP
-         vpc_subnet_id: subnet-7d578c06
-         group: team2DEV
-         instance_type: t2.small
-         image: ami-f1d7c395
-         wait: true
-         exact_count: 1
-         region: eu-west-2
-         user_data: "{{ lookup('file', 'remove.sh') }}"
-         count_tag:
-            Name: Team2SmallAgent2
-         instance_tags:
-            Name: Team2SmallAgent2
-      register: ec2
+#  tasks:
+#    - name: Provision a set of instances
+#      ec2:
+#         aws_access_key: 
+#         aws_secret_key: 
+#         key_name: Team2KP
+#         vpc_subnet_id: subnet-7d578c06
+#         group: team2DEV
+#         instance_type: t2.small
+#         image: ami-f1d7c395
+#         wait: true
+#         exact_count: 1
+#         region: eu-west-2
+#         user_data: "{{ lookup('file', 'remove.sh') }}"
+#         count_tag:
+#            Name: Team2SmallAgent2
+#         instance_tags:
+#            Name: Team2SmallAgent2
+#      register: ec2
 
-    - name: Add all instance public IPs to host group
-      become: yes
-      add_host: hostname={{ item.public_ip }} groups=ec2hosts2
-      with_items: "{{ ec2.instances }}"
+#    - name: Add all instance public IPs to host group
+#      become: yes
+#      add_host: hostname={{ item.public_ip }} groups=ec2hosts2
+#      with_items: "{{ ec2.instances }}"
 
-    - name: Wait for SSH to come up
-      become: yes
-      wait_for:
-        host: "{{ item.public_dns_name }}"
-        port: 22
-        delay: 20
-        timeout: 500
-        state: started
-      with_items: "{{ ec2.instances }}"
+#    - name: Wait for SSH to come up
+#      become: yes
+#      wait_for:
+#        host: "{{ item.public_dns_name }}"
+#        port: 22
+#        delay: 20
+#        timeout: 500
+#        state: started
+#      with_items: "{{ ec2.instances }}"
 
 #- name: dependency provisioning
-#  hosts: all
+#  hosts: ec2hosts2
 #  become: yes
 #  become_method: sudo
 #  gather_facts: false
@@ -47,35 +47,35 @@
 #    - name: install python2
 #      raw: sudo apt-get -y install python-simplejson
 
-- name: configuration play
-  hosts: ec2hosts2
-  become: yes
-  user: ubuntu
-  gather_facts: true
-  pre_tasks:
-   - name: Refresh apt cache
-     become: no
-     local_action: shell ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 {{ inventory_hostname }} sudo apt-get update
+#- name: configuration play
+#  hosts: ec2hosts2
+#  become: yes
+#  user: ubuntu
+#  gather_facts: true
+#  pre_tasks:
+#   - name: Refresh apt cache
+#     become: no
+#     local_action: shell ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 {{ inventory_hostname }} sudo apt-get update
 
-   - name: Install Python-apt to pull in Python
-     become: no
-     local_action: shell ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 {{ inventory_hostname }} sudo apt-get install --no-install-recommends --assume-yes python-apt
-  tasks:
-    - name: install base packages
-      apt: pkg={{item}} state=present update_cache=yes
-      with_items:
-        - git
-        - python-pip
-        - docker.io
+ #  - name: Install Python-apt to pull in Python
+ #    become: no
+ #    local_action: shell ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 {{ inventory_hostname }} sudo apt-get install --no-install-recommends --assume-yes python-apt
+ # tasks:
+ #   - name: install base packages
+ #     apt: pkg={{item}} state=present update_cache=yes
+ #     with_items:
+ #       - git
+ #       - python-pip
+ #       - docker.io
 
-- name: Install Docker
-  hosts: ec2hosts2
-  become: yes
-  user: ubuntu
-  gather_facts: true
-  tasks:
-    - pip:
-       name: docker-py
+#- name: Install Docker
+#  hosts: ec2hosts2
+#  become: yes
+#  user: ubuntu
+#  gather_facts: true
+#  tasks:
+#    - pip:
+#       name: docker-py
 
 #- name: Build Jira container
 #  hosts: ec2hosts2
@@ -94,15 +94,65 @@
 #      state: started
 #      restart_policy: always
 
-- name: Build Zabbix container
+- name: install zabbix
   hosts: ec2hosts2
+  remote_user: ubuntu
   become: yes
-  user: ubuntu
-  gather_facts: true
   tasks:
-  - name: Start Zabbix  container
-    docker_container:
-      name: zabbix
-      image: zabbix/zabbix-web-nginx-mysql
-      command: "sleep infinity"
-      restart_policy: always
+   - name: update package manager
+     apt: update_cache=yes
+
+   - name: Install mysql
+     docker_container:
+       name: mysql
+       image: mysql/mysql-server:8.0
+       state: started
+       restart_policy: always
+       env:
+         MYSQL_DATABASE: zabbix
+         MYSQL_USER: zabbix
+         MYSQL_PASSWORD: password
+         MYSQL_ROOT_PASSWORD: root
+
+   - name: Java Gateway
+     docker_container:
+       name: zabbix-java-gateway
+       image: zabbix/zabbix-java-gateway:latest
+
+   - name: Install zabbix server
+     docker_container:
+       name: zabbixserver
+       image: zabbix/zabbix-server-mysql:ubuntu-latest
+       state: started
+       links:
+        - "mysql:mysql"
+        - "zabbix-java-gateway:zabbix-java-gateway"
+       ports:
+        - "10051:10051"
+       env:
+        DB_SERVER_HOST: mysql-server
+        MYSQL_DATABASE: zabbix
+        MYSQL_USER: zabbix
+        MYSQL_PASSWORD: password
+        MYSQL_ROOT_PASSWORD: root
+        ZBX_JAVAGATEWAY: zabbix-java-gateway
+
+   - name: Install zabbix frontend on Ubuntu
+     docker_container:
+       name: zabbixapache
+       image: zabbix/zabbix-web-nginx-mysql:ubuntu-3.0-latest
+       state: started
+       restart: yes
+       ports:
+        - "80:80"
+       links:
+        - "mysql:mysql"
+        - "zabbixserver:zabbixserver"
+       env:
+        DB_SERVER_HOST: mysql-server
+        MYSQL_DATABASE: zabbix
+        MYSQL_USER: zabbix
+        MYSQL_PASSWORD: password
+        MYSQL_ROOT_PASSWORD: root
+        PHP_TZ: Europe/London
+        ZBX_SERVER_HOST: zabbixserver
